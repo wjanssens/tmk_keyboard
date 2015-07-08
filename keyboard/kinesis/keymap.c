@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         kJ6,kK6,kL6,kN6,kO6,kP6,          \
         kJ7,kK7,kL7,kN7,kO7,kP7,          \
             kJ3,kL3,kN3,kO3,              \
-    kG6,kE7,                              \
+    kE7,kG6,                              \
     kG7,                                  \
     kI7,kH6,kI6                           \
 ) {                                       \
