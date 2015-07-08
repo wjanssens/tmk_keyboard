@@ -17,7 +17,7 @@
 *          |  -_  |  =+  | Left | Right|                                         | Up   | Left |  [{  |  ]}  |
 *          `---------------------------'                                         `---------------------------'
 *                                        ,-------------.         ,-------------.
-*                                        |  /?  |  \|  |         |  `~  | §±   |
+*                                        |  /?  |  \|  |         |  §±  | `~   |
 *                                 ,------|------|------|         |------+------+------.
 *                                 |      |      | Fn   |         | Fn   |      |      |
 *                                 | BkSp | Del  |------|         |------|Return| Space|
@@ -68,7 +68,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            D   ,H   ,T   ,N   ,S   ,BSLS,
            B   ,M   ,W   ,V   ,Z   ,RSFT,
                 FN7 ,FN8 ,FN9 ,FN10,
-           GRV ,NUBS,
+           NUBS,GRV ,
            FN6 ,
            TAB ,ENT ,SPC
     ),
