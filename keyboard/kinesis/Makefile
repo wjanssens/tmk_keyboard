@@ -125,7 +125,7 @@ workman: all
 
 colemak: OPT_DEFS += -DKEYMAP_COLEMAK
 colemak: all
-	
+
 flash:
 	dfu-programmer atmega32u2 erase
 	dfu-programmer atmega32u2 flash kinesis.hex
