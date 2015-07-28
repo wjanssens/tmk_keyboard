@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void led_set(uint8_t usb_led)
 {
-	// TODO
+    uint8_t leds = 0xF0;
+    if (usb_led & 1 << USB_LED_NUM_LOCK)
+        leds &= ~0x10;
+    if (usb_led & 1 << USB_LED_CAPS_LOCK)
+        leds &= ~0x80;
+    if (usb_led & 1 << USB_LED_SCROLL_LOCK)
+        leds &= ~0x20;
+    PORTD = (PORTD & 0x0F) | leds;
 }
 
