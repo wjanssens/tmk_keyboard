@@ -53,26 +53,27 @@ uint8_t matrix_cols(void)
     return MATRIX_COLS;
 }
 
-void matrix_init(void) {
-	//debug_enable = true;
-	
-	//dprint("matrix_init"); dprintln();
-	// output high (leds)
-	DDRD    = 0xFF;
-	PORTD   = 0xFF;
-	
-	// output low (multiplexers)
-	DDRF    = 0xFF;
-	PORTF   = 0x00;
-	
-	// input with pullup (matrix)
-	DDRB    = 0x00;
-	PORTB   = 0xFF;
-	
-	// input with pullup (program and keypad buttons)
-	DDRC    = 0x00;
-	PORTC   = 0xFF;
-	
+void matrix_init(void)
+{
+    //debug_enable = true;
+    
+    //dprint("matrix_init"); dprintln();
+    // output high (leds)
+    DDRD    = 0xFF;
+    PORTD   = 0xFF;
+    
+    // output low (multiplexers)
+    DDRF    = 0xFF;
+    PORTF   = 0x00;
+    
+    // input with pullup (matrix)
+    DDRB    = 0x00;
+    PORTB   = 0xFF;
+    
+    // input with pullup (program and keypad buttons)
+    DDRC    = 0x00;
+    PORTC   = 0xFF;
+    
     // initialize row and col
     unselect();
 
@@ -83,7 +84,8 @@ void matrix_init(void) {
     }
 }
 
-uint8_t matrix_scan(void) {
+uint8_t matrix_scan(void)
+{
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         select(i);
         uint8_t row = read(i);
@@ -149,21 +151,21 @@ uint8_t matrix_key_count(void)
 
 static matrix_row_t read(uint8_t row)
 {
-	_delay_us(30);  // without this wait read unstable value.
-	return ~PINB;
+    _delay_us(30);  // without this wait read unstable value.
+    return ~PINB;
 
 }
 
 static void unselect(void)
 {
-	// set A,B,C,G to 0 (F4 - F7)
-	PORTF &= 0x0F;
+    // set A,B,C,G to 0 (F4 - F7)
+    PORTF &= 0x0F;
 }
 
 static void select(uint8_t row)
 {
-	// set A,B,C,G to row value
-	PORTF |= row << 4;
+    // set A,B,C,G to row value
+    PORTF |= row << 4;
 }
 
 /* Row pin configuration
