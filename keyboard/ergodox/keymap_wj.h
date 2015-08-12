@@ -11,7 +11,7 @@
 * |--------+------+------+------+------+------|  Fn  |           |  Fn  |------+------+------+------+------+--------|
 * |  Shift |  ;:  |   Q  |   J  |   K  |   X  |      |           |      |   B  |   M  |   W  |   V  |   Z  |  Shift |
 * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-*   |      | Shift| Ctrl | Alt  | Gui  |                                       | Gui  | Alt  | Ctrl | Shift|      |
+*   |  Fn  | Shift| Ctrl | Alt  | Gui  |                                       | Gui  | Alt  | Ctrl | Shift|  Fn  |
 *   |      |  -_  |  =+  | Left | Right|                                       | Up   | Left |  [{  |  ]}  |      |
 *   `----------------------------------'                                       `----------------------------------'
 *                                        ,-------------.       ,-------------.
@@ -33,7 +33,7 @@
 * |--------+------+------+------+------+------| TRNS |           | TRNS |------+------+------+------+------+--------|
 * |  Shift | PgDn | Left | Down | Right| Vol- |      |           |      | Prev |   1  |   2  |   3  |   =  | Shift  |
 * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-*   |      | Shift| Ctrl | Home | End  |                                       | PgUp | PgDn |   .  |   /  |      |
+*   | TRNS | Shift| Ctrl | Home | End  |                                       | PgUp | PgDn |   .  |   /  | TRNS   |
 *   `----------------------------------'                                       `----------------------------------'
 *                                        ,-------------.       ,-------------.
 *                                        |      |Teensy|       |      |   =  |
@@ -52,7 +52,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            TAB  ,QUOT,COMM,DOT ,P   ,Y   ,NO  ,
            ESC  ,A   ,O   ,E   ,U   ,I   ,     
            LSFT ,SCLN,Q   ,J   ,K   ,X   ,FN5 ,
-           NO   ,FN1 ,FN2 ,FN3 ,FN4 ,          
+           FN5  ,FN1 ,FN2 ,FN3 ,FN4 ,          
                                     SLSH,BSLS,
                                          NO  ,
                                BSPC,DEL ,ESC,
@@ -60,7 +60,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            NO  ,F   ,G   ,C   ,R   ,L   ,SLSH,
                 D   ,H   ,T   ,N   ,S   ,BSLS,
            FN6 ,B   ,M   ,W   ,V   ,Z   ,RSFT,
-                     FN7 ,FN8 ,FN9 ,FN10,NO  ,
+                     FN7 ,FN8 ,FN9 ,FN10,FN6 ,
            NUBS,GRV ,
            NO  ,
            TAB ,ENT ,SPC 
@@ -71,7 +71,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            NO  ,F11 ,F12 ,F13 ,F14 ,VOLU,NO  ,
            NO  ,PGUP,HOME,UP  ,END ,MUTE,     
            LSFT,PGDN,LEFT,DOWN,RGHT,VOLD,TRNS,
-           NO  ,LSFT,LCTL,HOME,END ,          
+           TRNS,LSFT,LCTL,HOME,END ,          
                                     NO  ,FN0 ,
                                          NO  ,
                                NO  ,INS ,CAPS,
@@ -79,7 +79,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            NO  ,MNXT,P7  ,P8  ,P9  ,PMNS,NO  ,
                 MPLY,P4  ,P5  ,P6  ,PPLS,NO  ,
            TRNS,MPRV,P1  ,P2  ,P3  ,PAST,RSFT,
-                     PGUP,PGDN,PDOT,PSLS,NO  ,
+                     PGUP,PGDN,PDOT,PSLS,TRNS,
            NO  ,PEQL,
            NO  ,
            NLCK,PENT,P0
