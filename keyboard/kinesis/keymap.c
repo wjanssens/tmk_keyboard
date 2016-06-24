@@ -60,11 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{ KC_##kF0,KC_##kF1,KC_##kF2,KC_##kF3,KC_##kF4,KC_##kF5,KC_##kF6,KC_NO   }, \
 	{ KC_##kG0,KC_##kG1,KC_##kG2,KC_##kG3,KC_##kG4,KC_NO   ,KC_##kG6,KC_##kG7}, \
 	{ KC_##kH0,KC_##kH1,KC_##kH2,KC_##kH3,KC_##kH4,KC_##kH5,KC_##kH6,KC_NO   }, \
-	{ KC_##kI0,KC_##kI1,KC_##kI2,KC_##kI3,KC_##kI4,KC_##kI5,KC_##kI6,KC_##kI7}, \
+	{ KC_##kI0,KC_##kI1,KC_##kI2,KC_##kI3,KC_NO   ,KC_NO   ,KC_##kI6,KC_##kI7}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_##kJ3,KC_##kJ4,KC_##kJ5,KC_##kJ6,KC_##kJ7}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_##kK4,KC_##kK5,KC_##kK6,KC_##kK7}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_##kL3,KC_##kL4,KC_##kL5,KC_##kL6,KC_##kL7}, \
-	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   }, \
+	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_##kI4,KC_##kI5}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_##kN3,KC_##kN4,KC_##kN5,KC_##kN6,KC_##kN7}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_##kO3,KC_##kO4,KC_##kO5,KC_##kO6,KC_##kO7}, \
 	{ KC_NO   ,KC_NO   ,KC_NO   ,KC_NO   ,KC_##kP4,KC_##kP5,KC_##kP6,KC_##kP7} \

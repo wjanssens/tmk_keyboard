@@ -151,9 +151,14 @@ uint8_t matrix_key_count(void)
 
 static matrix_row_t read(uint8_t row)
 {
-    _delay_us(30);  // without this wait read unstable value.
-    return ~PINB;
+	_delay_us(30);  // without this wait read unstable value.
 
+	//keypad and program buttons
+	if (row == 12)
+	{
+		return ~(PINC | 0b00111111);
+	}
+	return ~PINB;
 }
 
 static void unselect(void)
