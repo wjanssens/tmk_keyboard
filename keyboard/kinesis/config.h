@@ -62,4 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
 
+#define KEYMAP_PROGRAMMER
+
 #endif

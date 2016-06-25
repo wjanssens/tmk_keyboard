@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 #include "debug.h"
 #include "keymap.h"
+#include "action_layer.h"
+#include "config.h"
 
 #define KEYMAP(                           \
     kA2,kC2,kB2,kA1,kC1,kB1,kA0,kC0,kB0,  \
@@ -73,16 +75,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /*
 					A	B	C	D	E	F	G	H	I	J	K	L	M	N	O	P
-					4y0	4y1	4y2	4y3	4y4	4y5	4y6	4y7	5y0	5y1	5y2	5y3	5y4	5y5	5y6	5y7	
-					r1	r2	 r3 r4	r5	r6	r7	r8	r9	r10	r11	r12	r13	r14	r15	r16	
-0	PB0		21	c1	f6	f8	f7	5	4	3	2	1	=+								
-1	PB1		22	c2	f3	f5	f4	t	r	e	w	q	TAB								
-2	PB2		23	c3	ESC	f2	f1	g	f	d	s	a	CL								
-3	PB3		24	c4	f9	f11	f10	b	v	c	x	z	LS	UP		DN		[{	]}		
-4	PB4		25	c5  f12	SL	PS	RT		LT	§±	`~		6	7	8		9	0	-_ 	
-5	PB5		26	c6	PB	PGM	KPD	LA		HM		END		y	u	i		o	p	\	
-6	PB6		27	c7  			LC	DEL	BS	RC	ENT	SP	h	j	k		l	;:	'"	
-7	PB7		28	c8					RA		PU		PD	n	m	,<		.>	/?	RS	
+					4y0	4y1	4y2	4y3	4y4	4y5	4y6	4y7	5y0	5y1	5y2	5y3	5y4	5y5	5y6	5y7
+					r0	r1	r2	 r3 r4	r5	r6	r7	r8	r9	r10	r11	r12	r13	r14	r15
+0	PB0		21	c0	f6	f8	f7	5	4	3	2	1	=+
+1	PB1		22	c1	f3	f5	f4	t	r	e	w	q	TAB
+2	PB2		23	c2	ESC	f2	f1	g	f	d	s	a	CL
+3	PB3		24	c3	f9	f11	f10	b	v	c	x	z	LS	UP		DN		[{	]}
+4	PB4		25	c4  f12	SL	PS	RT		LT	§±	`~		6	7	8		9	0	-_
+5	PB5		26	c5	PB	PGM	KPD	LA		HM		END		y	u	i		o	p	\
+6	PB6		27	c6  			LC	DEL	BS	RC	ENT	SP	h	j	k		l	;:	'"
+7	PB7		28	c7					RA		PU		PD	n	m	,<		.>	/?	RS
 */
 
 #if defined(KEYMAP_DVORAK)
@@ -91,6 +93,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keymap_colemak.h"
 #elif defined(KEYMAP_WORKMAN)
 #include "keymap_workman.h"
+#elif defined(KEYMAP_PROGRAMMER)
+#include "keymap_programmer.h"
 #else
 #include "keymap_qwerty.h"
 #endif
@@ -98,6 +102,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KEYMAPS_SIZE    (sizeof(keymaps) / sizeof(keymaps[0]))
 #define FN_ACTIONS_SIZE (sizeof(fn_actions) / sizeof(fn_actions[0]))
+#define FN_ACTIONS_1_SIZE   (sizeof(fn_actions_1) / sizeof(fn_actions_1[0]))
+#define FN_ACTIONS_2_SIZE   (sizeof(fn_actions_2) / sizeof(fn_actions_2[0]))
 
 /* translates key to keycode */
 uint8_t keymap_key_to_keycode(uint8_t layer, keypos_t key)
@@ -116,12 +122,25 @@ uint8_t keymap_key_to_keycode(uint8_t layer, keypos_t key)
 /* translates Fn keycode to action */
 action_t keymap_fn_to_action(uint8_t keycode)
 {
-    action_t action;
-    if (FN_INDEX(keycode) < FN_ACTIONS_SIZE) {
-        action.code = pgm_read_word(&fn_actions[FN_INDEX(keycode)]);
-    } else {
-        action.code = ACTION_NO;
-    }
-    return action;
+	uint8_t layer = biton32(layer_state);
+
+	action_t action;
+	action.code = ACTION_NO;
+
+	if (layer == 1 && FN_INDEX(keycode) < FN_ACTIONS_1_SIZE) {
+		action.code = pgm_read_word(&fn_actions_1[FN_INDEX(keycode)]);
+	}
+	if (layer == 2 && FN_INDEX(keycode) < FN_ACTIONS_2_SIZE) {
+		action.code = pgm_read_word(&fn_actions_2[FN_INDEX(keycode)]);
+	}
+	// by default, use fn_actions from default layer 0
+	// this is needed to get mapping for same key, that was used switch to some layer,
+	// to have possibility to switch layers back
+	if (action.code == ACTION_NO && FN_INDEX(keycode) < FN_ACTIONS_SIZE) {
+		action.code = pgm_read_word(&fn_actions[FN_INDEX(keycode)]);
+	}
+
+	return action;
 }
+
 
