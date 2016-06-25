@@ -30,6 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 8
 
+#define MOUSEKEY_DELAY          20
+#define MOUSEKEY_INTERVAL       20
+#define MOUSEKEY_MAX_SPEED      4
+#define MOUSEKEY_TIME_TO_MAX    20
+#define MOUSEKEY_WHEEL_MAX_SPEED 1
+#define MOUSEKEY_WHEEL_DELTA 1
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 1
+	
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
