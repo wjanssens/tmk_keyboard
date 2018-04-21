@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "action_macro.h"
 #include "action_util.h"
 #include "action.h"
+#include "hook.h"
+#include "wait.h"
 
 #ifdef DEBUG_ACTION
 #include "debug.h"
@@ -39,6 +41,7 @@ void action_exec(keyevent_t event)
     if (!IS_NOEVENT(event)) {
         dprint("\n---- action_exec: start -----\n");
         dprint("EVENT: "); debug_event(event); dprintln();
+        hook_matrix_change(event);
     }
 
     keyrecord_t record = { .event = event };
@@ -62,7 +65,7 @@ void process_action(keyrecord_t *record)
 
     if (IS_NOEVENT(event)) { return; }
 
-    action_t action = layer_switch_get_action(event.key);
+    action_t action = layer_switch_get_action(event);
     dprint("ACTION: "); debug_action(action);
 #ifndef NO_ACTION_LAYER
     dprint(" layer_state: "); layer_debug();
@@ -98,7 +101,7 @@ void process_action(keyrecord_t *record)
             {
                 uint8_t mods = (action.kind.id == ACT_LMODS_TAP) ?  action.key.mods :
                                                                     action.key.mods<<4;
-                switch (action.layer_tap.code) {
+                switch (action.key.code) {
     #ifndef NO_ACTION_ONESHOT
                     case MODS_ONESHOT:
                         // Oneshot modifier
@@ -131,10 +134,17 @@ void process_action(keyrecord_t *record)
                     case MODS_TAP_TOGGLE:
                         if (event.pressed) {
                             if (tap_count <= TAPPING_TOGGLE) {
-                                register_mods(mods);
+                                if (mods & get_mods()) {
+                                    dprint("MODS_TAP_TOGGLE: toggle mods off\n");
+                                    unregister_mods(mods);
+                                } else {
+                                    dprint("MODS_TAP_TOGGLE: toggle mods on\n");
+                                    register_mods(mods);
+                                }
                             }
                         } else {
                             if (tap_count < TAPPING_TOGGLE) {
+                                dprint("MODS_TAP_TOGGLE: release : unregister_mods\n");
                                 unregister_mods(mods);
                             }
                         }
@@ -237,14 +247,18 @@ void process_action(keyrecord_t *record)
         case ACT_LAYER_TAP:
         case ACT_LAYER_TAP_EXT:
             switch (action.layer_tap.code) {
-                case 0xe0 ... 0xef:
-                    /* layer On/Off with modifiers(left only) */
+                case 0xc0 ... 0xdf:
+                    /* layer On/Off with modifiers */
                     if (event.pressed) {
                         layer_on(action.layer_tap.val);
-                        register_mods(action.layer_tap.code & 0x0f);
+                        register_mods((action.layer_tap.code & 0x10) ?
+                                (action.layer_tap.code & 0x0f) << 4 :
+                                (action.layer_tap.code & 0x0f));
                     } else {
                         layer_off(action.layer_tap.val);
-                        unregister_mods(action.layer_tap.code & 0x0f);
+                        unregister_mods((action.layer_tap.code & 0x10) ?
+                                (action.layer_tap.code & 0x0f) << 4 :
+                                (action.layer_tap.code & 0x0f));
                     }
                     break;
                 case OP_TAP_TOGGLE:
@@ -356,6 +370,7 @@ void register_code(uint8_t code)
 #endif
         add_key(KC_CAPSLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_CAPSLOCK);
         send_keyboard_report();
     }
@@ -366,6 +381,7 @@ void register_code(uint8_t code)
 #endif
         add_key(KC_NUMLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_NUMLOCK);
         send_keyboard_report();
     }
@@ -376,6 +392,7 @@ void register_code(uint8_t code)
 #endif
         add_key(KC_SCROLLLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_SCROLLLOCK);
         send_keyboard_report();
     }
@@ -431,6 +448,7 @@ void unregister_code(uint8_t code)
 #endif
         add_key(KC_CAPSLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_CAPSLOCK);
         send_keyboard_report();
     }
@@ -441,6 +459,7 @@ void unregister_code(uint8_t code)
 #endif
         add_key(KC_NUMLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_NUMLOCK);
         send_keyboard_report();
     }
@@ -451,6 +470,7 @@ void unregister_code(uint8_t code)
 #endif
         add_key(KC_SCROLLLOCK);
         send_keyboard_report();
+        wait_ms(100);
         del_key(KC_SCROLLLOCK);
         send_keyboard_report();
     }
@@ -470,6 +490,12 @@ void unregister_code(uint8_t code)
     else if IS_CONSUMER(code) {
         host_consumer_send(0);
     }
+}
+
+void type_code(uint8_t code)
+{
+    register_code(code);
+    unregister_code(code);
 }
 
 void register_mods(uint8_t mods)
@@ -509,17 +535,29 @@ void clear_keyboard_but_mods(void)
 #endif
 }
 
-bool is_tap_key(keypos_t key)
+bool is_tap_key(keyevent_t event)
 {
-    action_t action = layer_switch_get_action(key);
+    if (IS_NOEVENT(event)) { return false; }
+
+    action_t action = layer_switch_get_action(event);
 
     switch (action.kind.id) {
         case ACT_LMODS_TAP:
         case ACT_RMODS_TAP:
+            switch (action.key.code) {
+                case MODS_ONESHOT:
+                case MODS_TAP_TOGGLE:
+                case KC_A ... KC_EXSEL:                 // tap key
+                case KC_LCTRL ... KC_RGUI:              // tap key
+                    return true;
+            }
         case ACT_LAYER_TAP:
         case ACT_LAYER_TAP_EXT:
             switch (action.layer_tap.code) {
-                case 0x00 ... 0xdf:
+                case 0xc0 ... 0xdf:         // with modifiers
+                    return false;
+                case KC_A ... KC_EXSEL:     // tap key
+                case KC_LCTRL ... KC_RGUI:  // tap key
                 case OP_TAP_TOGGLE:
                     return true;
             }

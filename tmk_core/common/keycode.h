@@ -25,7 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define IS_ERROR(code)           (KC_ROLL_OVER <= (code) && (code) <= KC_UNDEFINED)
 #define IS_ANY(code)             (KC_A         <= (code) && (code) <= 0xFF)
+
+#ifndef ACTIONMAP_ENABLE
 #define IS_KEY(code)             (KC_A         <= (code) && (code) <= KC_EXSEL)
+#else
+#define IS_KEY(code)             ((KC_A         <= (code) && (code) <= KC_EXSEL) || \
+                                  (KC_KP_00     <= (code) && (code) <= KC_KP_HEXADECIMAL))
+#endif
+
 #define IS_MOD(code)             (KC_LCTRL     <= (code) && (code) <= KC_RGUI)
 
 
@@ -85,15 +92,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_LCAP KC_LOCKING_CAPS
 #define KC_LNUM KC_LOCKING_NUM
 #define KC_LSCR KC_LOCKING_SCROLL
-#define KC_ERAS KC_ALT_ERASE,
+#define KC_ERAS KC_ALT_ERASE
 #define KC_CLR  KC_CLEAR
 /* Japanese specific */
 #define KC_ZKHK KC_GRAVE
 #define KC_RO   KC_INT1
 #define KC_KANA KC_INT2
 #define KC_JYEN KC_INT3
+#define KC_JPY  KC_INT3
 #define KC_HENK KC_INT4
 #define KC_MHEN KC_INT5
+/* Korean specific */
+#define KC_HAEN KC_LANG1
+#define KC_HANJ KC_LANG2
 /* Keypad */
 #define KC_P1   KC_KP_1
 #define KC_P2   KC_KP_2
@@ -113,6 +124,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_PPLS KC_KP_PLUS
 #define KC_PEQL KC_KP_EQUAL
 #define KC_PENT KC_KP_ENTER
+/* Unix function key */
+#define KC_EXEC KC_EXECUTE
+#define KC_SLCT KC_SELECT
+#define KC_AGIN KC_AGAIN
+#define KC_PSTE KC_PASTE
 /* Mousekey */
 #define KC_MS_U KC_MS_UP
 #define KC_MS_D KC_MS_DOWN
@@ -144,8 +160,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_MRWD KC_MEDIA_REWIND
 #define KC_MSTP KC_MEDIA_STOP
 #define KC_MPLY KC_MEDIA_PLAY_PAUSE
-#define KC_MSEL KC_MEDIA_SELECT
 #define KC_EJCT KC_MEDIA_EJECT
+#define KC_MSEL KC_MEDIA_SELECT
 #define KC_MAIL KC_MAIL
 #define KC_CALC KC_CALCULATOR
 #define KC_MYCM KC_MY_COMPUTER
@@ -156,6 +172,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_WSTP KC_WWW_STOP
 #define KC_WREF KC_WWW_REFRESH
 #define KC_WFAV KC_WWW_FAVORITES
+/* Jump to bootloader */
+#define KC_BTLD KC_BOOTLOADER
 /* Transparent */
 #define KC_TRANSPARENT  1
 #define KC_TRNS KC_TRANSPARENT
@@ -168,7 +186,7 @@ enum hid_keyboard_keypad_usage {
     KC_ROLL_OVER,
     KC_POST_FAIL,
     KC_UNDEFINED,
-    KC_A,
+    KC_A,               /* 0x04 */
     KC_B,
     KC_C,
     KC_D,
@@ -330,10 +348,7 @@ enum hid_keyboard_keypad_usage {
     KC_CRSEL,
     KC_EXSEL,           /* 0xA4 */
 
-    /* NOTE: 0xA5-DF are used for internal special purpose */
-
-#if 0
-    /* NOTE: Following codes(0xB0-DD) are not used. Leave them for reference. */
+    /* NOTE: Following code range(0xB0-DD) are shared with special codes of 8-bit keymap */
     KC_KP_00            = 0xB0,
     KC_KP_000,
     KC_THOUSANDS_SEPARATOR,
@@ -380,7 +395,6 @@ enum hid_keyboard_keypad_usage {
     KC_KP_OCTAL,
     KC_KP_DECIMAL,
     KC_KP_HEXADECIMAL,  /* 0xDD */
-#endif
 
     /* Modifiers */
     KC_LCTRL            = 0xE0,
@@ -390,13 +404,11 @@ enum hid_keyboard_keypad_usage {
     KC_RCTRL,
     KC_RSHIFT,
     KC_RALT,
-    KC_RGUI,
-
-    /* NOTE: 0xE8-FF are used for internal special purpose */
+    KC_RGUI,            /* 0xE7 */
 };
 
-/* Special keycodes */
-/* NOTE: 0xA5-DF and 0xE8-FF are used for internal special purpose */
+/* Special keycodes for 8-bit keymap
+   NOTE: 0xA5-DF and 0xE8-FF are used for internal special purpose */
 enum internal_special_keycodes {
     /* System Control */
     KC_SYSTEM_POWER     = 0xA5,
@@ -409,10 +421,12 @@ enum internal_special_keycodes {
     KC_AUDIO_VOL_DOWN,
     KC_MEDIA_NEXT_TRACK,
     KC_MEDIA_PREV_TRACK,
+    KC_MEDIA_FAST_FORWARD,
+    KC_MEDIA_REWIND,
     KC_MEDIA_STOP,
     KC_MEDIA_PLAY_PAUSE,
-    KC_MEDIA_SELECT,
     KC_MEDIA_EJECT,
+    KC_MEDIA_SELECT,
     KC_MAIL,
     KC_CALCULATOR,
     KC_MY_COMPUTER,
@@ -422,9 +436,10 @@ enum internal_special_keycodes {
     KC_WWW_FORWARD,
     KC_WWW_STOP,
     KC_WWW_REFRESH,
-    KC_WWW_FAVORITES,
-    KC_MEDIA_FAST_FORWARD,
-    KC_MEDIA_REWIND,    /* 0xBC */
+    KC_WWW_FAVORITES,    /* 0xBC */
+
+    /* Jump to bootloader */
+    KC_BOOTLOADER       = 0xBF,
 
     /* Fn key */
     KC_FN0              = 0xC0,

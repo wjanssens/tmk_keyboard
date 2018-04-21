@@ -3,20 +3,13 @@
 #include <avr/power.h>
 #include <util/delay.h>
 
-// USB HID host
-#include "Usb.h"
-#include "hid.h"
-#include "hidboot.h"
-#include "parser.h"
-#include "usbhub.h"
-
 // LUFA
 #include "lufa.h"
 
-#include "timer.h"
 #include "sendchar.h"
 #include "debug.h"
 #include "keyboard.h"
+#include "led.h"
 
 
 /* LED ping configuration */
@@ -42,19 +35,6 @@
 #endif
 
 
-static USB     usb_host;
-static HIDBoot<HID_PROTOCOL_KEYBOARD>    kbd(&usb_host);
-static KBDReportParser kbd_parser;
-static USBHub hub1(&usb_host);  // one hub is enough for HHKB pro2
-/* may be needed  for other device with more hub
-static USBHub hub2(&usb_host);
-static USBHub hub3(&usb_host);
-static USBHub hub4(&usb_host);
-static USBHub hub5(&usb_host);
-static USBHub hub6(&usb_host);
-static USBHub hub7(&usb_host);
-*/
-
 static void LUFA_setup(void)
 {
     /* Disable watchdog if enabled by bootloader/fuses */
@@ -62,7 +42,11 @@ static void LUFA_setup(void)
     wdt_disable();
 
     /* Disable clock division */
+#if (F_CPU == 8000000)
+    clock_prescale_set(clock_div_2);    // 16MHz crystal divided by 2
+#else
     clock_prescale_set(clock_div_1);
+#endif
 
     // Leonardo needs. Without this USB device is not recognized.
     USB_Disable();
@@ -74,16 +58,7 @@ static void LUFA_setup(void)
     print_set_sendchar(sendchar);
 }
 
-static void HID_setup()
-{
-    if (usb_host.Init() == -1) {
-        LED_TX_OFF;
-    }
 
-    _delay_ms(200);
-
-    kbd.SetReportParser(0, (HIDReportParser*)&kbd_parser);
-}
 
 int main(void)
 {
@@ -92,35 +67,30 @@ int main(void)
     LED_TX_ON;
 
     debug_enable = true;
+    debug_keyboard = true;
 
     host_set_driver(&lufa_driver);
     keyboard_init();
 
     LUFA_setup();
-    HID_setup();
+
     /* NOTE: Don't insert time consuming job here.
      * It'll cause unclear initialization failure when DFU reset(worm start).
      */
     sei();
 
+/* Some keyboards bootup quickly and cannot be initialized with this startup wait.
     // wait for startup of sendchar routine
     while (USB_DeviceState != DEVICE_STATE_Configured) ;
     if (debug_enable) {
         _delay_ms(1000);
     }
+*/
 
     debug("init: done\n");
 
-uint16_t timer;
     for (;;) {
         keyboard_task();
-
-timer = timer_read();
-        usb_host.Task();
-timer = timer_elapsed(timer);
-if (timer > 100) {
-    debug("host.Task: "); debug_hex16(timer);  debug("\n");
-}
 
 #if !defined(INTERRUPT_CONTROL_ENDPOINT)
         // LUFA Task for control request

@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <stdint.h>
 #include <stdbool.h>
-#include <util/delay.h>
+#include "wait.h"
 #include "keycode.h"
 #include "host.h"
 #include "keymap.h"
@@ -57,9 +57,10 @@ static void command_console_help(void);
 #ifdef MOUSEKEY_ENABLE
 static bool mousekey_console(uint8_t code);
 static void mousekey_console_help(void);
+static uint8_t numkey2num(uint8_t code);
 #endif
 
-static uint8_t numkey2num(uint8_t code);
+
 static void switch_default_layer(uint8_t layer);
 
 
@@ -97,12 +98,14 @@ bool command_proc(uint8_t code)
 bool command_extra(uint8_t code) __attribute__ ((weak));
 bool command_extra(uint8_t code)
 {
+    (void)code;
     return false;
 }
 
 bool command_console_extra(uint8_t code) __attribute__ ((weak));
 bool command_console_extra(uint8_t code)
 {
+    (void)code;
     return false;
 }
 
@@ -178,14 +181,24 @@ static void print_eeconfig(void)
 
 static bool command_common(uint8_t code)
 {
+#ifdef KEYBOARD_LOCK_ENABLE
     static host_driver_t *host_driver = 0;
+#endif
+#ifdef SLEEP_LED_ENABLE
+    static bool sleep_led_test = false;
+#endif
     switch (code) {
 #ifdef SLEEP_LED_ENABLE
         case KC_Z:
             // test breathing sleep LED
             print("Sleep LED test\n");
-            sleep_led_toggle();
-            led_set(host_keyboard_leds());
+            if (sleep_led_test) {
+                sleep_led_disable();
+                led_set(host_keyboard_leds());
+            } else {
+                sleep_led_enable();
+            }
+            sleep_led_test = !sleep_led_test;
             break;
 #endif
 #ifdef BOOTMAGIC_ENABLE
@@ -223,18 +236,18 @@ static bool command_common(uint8_t code)
         case KC_PAUSE:
             clear_keyboard();
             print("\n\nbootloader... ");
-            _delay_ms(1000);
+            wait_ms(1000);
             bootloader_jump(); // not return
             break;
         case KC_D:
             if (debug_enable) {
-                print("\ndebug: on\n");
+                print("\ndebug: off\n");
                 debug_matrix   = false;
                 debug_keyboard = false;
                 debug_mouse    = false;
                 debug_enable   = false;
             } else {
-                print("\ndebug: off\n");
+                print("\ndebug: on\n");
                 debug_enable   = true;
             }
             break;
@@ -283,6 +296,9 @@ static bool command_common(uint8_t code)
 #ifdef PROTOCOL_VUSB
             " VUSB"
 #endif
+#ifdef PROTOCOL_CHIBIOS
+            " CHIBIOS"
+#endif
 #ifdef BOOTMAGIC_ENABLE
             " BOOTMAGIC"
 #endif
@@ -307,15 +323,23 @@ static bool command_common(uint8_t code)
             " " STR(BOOTLOADER_SIZE) "\n");
 
             print("GCC: " STR(__GNUC__) "." STR(__GNUC_MINOR__) "." STR(__GNUC_PATCHLEVEL__)
+#if defined(__AVR__)
                   " AVR-LIBC: " __AVR_LIBC_VERSION_STRING__
                   " AVR_ARCH: avr" STR(__AVR_ARCH__) "\n");
+#elif defined(__arm__)
+            // TODO
+            );
+#endif
             break;
         case KC_S:
             print("\n\t- Status -\n");
             print_val_hex8(host_keyboard_leds());
             print_val_hex8(keyboard_protocol);
             print_val_hex8(keyboard_idle);
-            print_val_hex32(timer_count);
+#ifdef NKRO_ENABLE
+            print_val_hex8(keyboard_nkro);
+#endif
+            print_val_hex32(timer_read32());
 
 #ifdef PROTOCOL_PJRC
             print_val_hex8(UDCON);
@@ -335,10 +359,11 @@ static bool command_common(uint8_t code)
         case KC_N:
             clear_keyboard(); //Prevents stuck keys.
             keyboard_nkro = !keyboard_nkro;
-            if (keyboard_nkro)
+            if (keyboard_nkro) {
                 print("NKRO: on\n");
-            else
+            } else {
                 print("NKRO: off\n");
+            }
             break;
 #endif
         case KC_ESC:
@@ -592,10 +617,11 @@ static bool mousekey_console(uint8_t code)
             print("?");
             return false;
     }
-    if (mousekey_param)
+    if (mousekey_param) {
         xprintf("M%d> ", mousekey_param);
-    else
+    } else {
         print("M>" );
+    }
     return true;
 }
 #endif
@@ -604,6 +630,7 @@ static bool mousekey_console(uint8_t code)
 /***********************************************************
  * Utilities
  ***********************************************************/
+#if MOUSEKEY_ENABLE
 static uint8_t numkey2num(uint8_t code)
 {
     switch (code) {
@@ -620,6 +647,7 @@ static uint8_t numkey2num(uint8_t code)
     }
     return 0;
 }
+#endif
 
 static void switch_default_layer(uint8_t layer)
 {

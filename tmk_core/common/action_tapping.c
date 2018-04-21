@@ -30,7 +30,6 @@ static bool process_tapping(keyrecord_t *record);
 static bool waiting_buffer_enq(keyrecord_t record);
 static void waiting_buffer_clear(void);
 static bool waiting_buffer_typed(keyevent_t event);
-static bool waiting_buffer_has_anykey_pressed(void);
 static void waiting_buffer_scan_tap(void);
 static void debug_tapping_key(void);
 static void debug_waiting_buffer(void);
@@ -116,7 +115,7 @@ bool process_tapping(keyrecord_t *keyp)
                  */
                 else if (IS_RELEASED(event) && !waiting_buffer_typed(event)) {
                     // Modifier should be retained till end of this tapping.
-                    action_t action = layer_switch_get_action(event.key);
+                    action_t action = layer_switch_get_action(event);
                     switch (action.kind.id) {
                         case ACT_LMODS:
                         case ACT_RMODS:
@@ -153,7 +152,7 @@ bool process_tapping(keyrecord_t *keyp)
                     debug_tapping_key();
                     return true;
                 }
-                else if (is_tap_key(event.key) && event.pressed) {
+                else if (is_tap_key(event) && event.pressed) {
                     if (tapping_key.tap.count > 1) {
                         debug("Tapping: Start new tap with releasing last tap(>1).\n");
                         // unregister key
@@ -197,7 +196,7 @@ bool process_tapping(keyrecord_t *keyp)
                     tapping_key = (keyrecord_t){};
                     return true;
                 }
-                else if (is_tap_key(event.key) && event.pressed) {
+                else if (is_tap_key(event) && event.pressed) {
                     if (tapping_key.tap.count > 1) {
                         debug("Tapping: Start new tap with releasing last timeout tap(>1).\n");
                         // unregister key
@@ -242,7 +241,7 @@ bool process_tapping(keyrecord_t *keyp)
                         tapping_key = *keyp;
                         return true;
                     }
-                } else if (is_tap_key(event.key)) {
+                } else if (is_tap_key(event)) {
                     // Sequential tap can be interfered with other tap key.
                     debug("Tapping: Start with interfering other tap.\n");
                     tapping_key = *keyp;
@@ -273,7 +272,7 @@ bool process_tapping(keyrecord_t *keyp)
     }
     // not tapping state
     else {
-        if (event.pressed && is_tap_key(event.key)) {
+        if (event.pressed && is_tap_key(event)) {
             debug("Tapping: Start(Press tap key).\n");
             tapping_key = *keyp;
             waiting_buffer_scan_tap();
@@ -320,14 +319,6 @@ bool waiting_buffer_typed(keyevent_t event)
         if (KEYEQ(event.key, waiting_buffer[i].event.key) && event.pressed !=  waiting_buffer[i].event.pressed) {
             return true;
         }
-    }
-    return false;
-}
-
-bool waiting_buffer_has_anykey_pressed(void)
-{
-    for (uint8_t i = waiting_buffer_tail; i != waiting_buffer_head; i = (i + 1) % WAITING_BUFFER_SIZE) {
-        if (waiting_buffer[i].event.pressed) return true;
     }
     return false;
 }

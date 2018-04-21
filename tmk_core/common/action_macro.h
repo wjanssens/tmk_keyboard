@@ -64,6 +64,9 @@ enum macro_command_id{
     /* 0x74 - 0x83 */
     WAIT                = 0x74,
     INTERVAL,
+    MOD_STORE,
+    MOD_RESTORE,
+    MOD_CLEAR,
 
     /* 0x84 - 0xf3 (reserved for keycode up) */
 
@@ -82,6 +85,9 @@ enum macro_command_id{
 #define TYPE(key)       DOWN(key), UP(key)
 #define WAIT(ms)        WAIT, (ms)
 #define INTERVAL(ms)    INTERVAL, (ms)
+#define STORE()         MOD_STORE
+#define RESTORE()       MOD_RESTORE
+#define CLEAR()         MOD_CLEAR
 
 /* key down */
 #define D(key)          DOWN(KC_##key)
@@ -93,6 +99,25 @@ enum macro_command_id{
 #define W(ms)           WAIT(ms)
 /* interval */
 #define I(ms)           INTERVAL(ms)
+/* store modifier(s) */
+#define SM()            STORE()
+/* restore modifier(s) */
+#define RM()            RESTORE()
+/* clear modifier(s) */
+#define CM()            CLEAR()
+/* key shift-type */
+#define ST(key)         D(LSFT),    T(key),   U(LSFT)
+/* modifier utility macros */
+/*      Example: Ctrl+Alt+[Shift+]<key1,key2> is CTL_( ALT_( [S]T(key1), [S]T(key2) )) . */
+#define SFT_(...)       D(LSFT), __VA_ARGS__, U(LSFT)
+#define CTL_(...)       D(LCTL), __VA_ARGS__, U(LCTL)
+#define ALT_(...)       D(LALT), __VA_ARGS__, U(LALT)
+#define AGR_(...)       D(RALT), __VA_ARGS__, U(RALT)
+/* Unicode macros for XOrg/MacOs/Win. */
+/*      Example: UNIW_(0,1,4,9) enters a bullet glyph on Windows using Alt+KeyPad(####). */
+#define UNIX_(d1,d2,d3,d4)  CTL_(ST(U)),    T(d1), T(d2), T(d3), T(d4)      , T(ENT)
+#define UNIM_(d1,d2,d3,d4)  ALT_(           T(d1), T(d2), T(d3), T(d4)      )
+#define UNIW_(d1,d2,d3,d4)  ALT_( T(P##d1), T(P##d2), T(P##d3), T(P##d4)    )
 
 /* for backward comaptibility */
 #define MD(key)         DOWN(KC_##key)

@@ -134,6 +134,34 @@ static uint8_t leds = 0;
 static uint8_t keyboard_leds(void) { return leds; }
 void rn42_set_leds(uint8_t l) { leds = l; }
 
+
+void rn42_send_str(const char *str)
+{
+    uint8_t c;
+    while ((c = pgm_read_byte(str++)))
+        rn42_putc(c);
+}
+
+const char *rn42_send_command(const char *cmd)
+{
+    static const char *s;
+    rn42_send_str(cmd);
+    wait_ms(500);
+    s = rn42_gets(100);
+    xprintf("%s\r\n", s);
+    rn42_print_response();
+    return s;
+}
+
+void rn42_print_response(void)
+{
+    int16_t c;
+    while ((c = rn42_getc()) != -1) {
+        xprintf("%c", c);
+    }
+}
+
+
 static void send_keyboard(report_keyboard_t *report)
 {
     // wake from deep sleep
@@ -184,20 +212,20 @@ static void send_system(uint16_t data)
 static uint16_t usage2bits(uint16_t usage)
 {
     switch (usage) {
-        case AC_HOME:               return 0x01;
-        case AL_EMAIL:              return 0x02;
-        case AC_SEARCH:             return 0x04;
+        case APPCONTROL_HOME:         return 0x01;
+        case APPLAUNCH_EMAIL:         return 0x02;
+        case APPCONTROL_SEARCH:       return 0x04;
         //case AL_KBD_LAYOUT:         return 0x08;  // Apple virtual keybaord toggle
-        case AUDIO_VOL_UP:          return 0x10;
-        case AUDIO_VOL_DOWN:        return 0x20;
-        case AUDIO_MUTE:            return 0x40;
-        case TRANSPORT_PLAY_PAUSE:  return 0x80;
-        case TRANSPORT_NEXT_TRACK:  return 0x100;
-        case TRANSPORT_PREV_TRACK:  return 0x200;
-        case TRANSPORT_STOP:        return 0x400;
-        case TRANSPORT_STOP_EJECT:  return 0x800;
-        //case return 0x1000;   // Fast forward
-        //case return 0x2000;   // Rewind
+        case AUDIO_VOL_UP:            return 0x10;
+        case AUDIO_VOL_DOWN:          return 0x20;
+        case AUDIO_MUTE:              return 0x40;
+        case TRANSPORT_PLAY_PAUSE:    return 0x80;
+        case TRANSPORT_NEXT_TRACK:    return 0x100;
+        case TRANSPORT_PREV_TRACK:    return 0x200;
+        case TRANSPORT_STOP:          return 0x400;
+        case TRANSPORT_STOP_EJECT:    return 0x800;
+        case TRANSPORT_FAST_FORWARD:  return 0x1000;
+        case TRANSPORT_REWIND:        return 0x2000;
         //case return 0x4000;   // Stop/eject
         //case return 0x8000;   // Internet browser
     };
