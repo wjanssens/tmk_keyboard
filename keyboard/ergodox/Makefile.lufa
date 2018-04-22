@@ -48,11 +48,17 @@ TMK_DIR = ../../tmk_core
 TARGET_DIR = .
 
 # project specific files
-SRC =	keymap.c \
+SRC =	keymap_common.c \
 	matrix.c \
 	led.c \
 	ergodox.c \
 	twimaster.c
+
+ifdef KEYMAP
+    SRC := keymap_$(KEYMAP).c $(SRC)
+else
+    SRC := keymap_wj.c $(SRC)
+endif
 
 CONFIG_H = config.h
 
@@ -121,20 +127,3 @@ include $(TMK_DIR)/protocol.mk
 include $(TMK_DIR)/protocol/lufa.mk
 include $(TMK_DIR)/common.mk
 include $(TMK_DIR)/rules.mk
-
-dvorak: OPT_DEFS += -DKEYMAP_DVORAK
-dvorak: all
-
-colemak: OPT_DEFS += -DKEYMAP_COLEMAK
-colemak: all
-
-workman: OPT_DEFS += -DKEYMAP_WORKMAN
-workman: all
-
-micro: OPT_DEFS += -DKEYMAP_MICRO
-micro: all
-
-cub: OPT_DEFS += -DKEYMAP_CUB
-cub: all
-
-

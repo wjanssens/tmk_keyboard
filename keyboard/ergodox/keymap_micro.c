@@ -3,8 +3,12 @@
 // http://geekhack.org/index.php?topic=42231.msg1062851#msg1062851
 // https://www.massdrop.com/ext/ergodox/?referer=CTL63V&hash=9ff8ddbb75e03e517aaa39acabc81669
 //
+#include <util/delay.h>
+#include "bootloader.h"
+#include "keymap_common.h"
 
-static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Keymap: Default Layer in QWERTY
      *
@@ -199,12 +203,12 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            TRNS,
                                  TRNS,TRNS,TRNS,
 
-        // in Workman right hand will be:
-        //
-        //    ^ { } ( ) +
-        //    ' ! $ " ; =
-        //    # [ < > ] \
-        //
+        /* in Workman right hand will be:
+         *
+         *    ^ { } ( ) +
+         *    ' ! $ " ; =
+         *    # [ < > ] \
+         */
 
         // right hand
              TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
@@ -361,7 +365,7 @@ enum function_id {
 /*
  * Fn action definition
  */
-static const uint16_t PROGMEM fn_actions[] = {
+const action_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
     // Layer4: unconvenient keys on right hand

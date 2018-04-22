@@ -1,3 +1,9 @@
+#include <util/delay.h>
+#include "action_layer.h"
+#include "action_util.h"
+#include "bootloader.h"
+#include "keymap_common.h"
+
 /****************************************************************************************************
 *
 * Keymap: Default Layer in Dvorak
@@ -45,7 +51,7 @@
 *
 */
 
-static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 0: Default */
     KEYMAP(
            EQL  ,1   ,2   ,3   ,4   ,5   ,NO  ,
@@ -87,7 +93,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 enum function_id {
     TEENSY_KEY,
 };
-static const uint16_t PROGMEM fn_actions[] = {
+const action_t PROGMEM fn_actions[] = {
 	[0] = ACTION_FUNCTION(TEENSY_KEY),
 	[1] = ACTION_MODS_TAP_KEY(MOD_LSFT, KC_MINS),
 	[2] = ACTION_MODS_TAP_KEY(MOD_LCTL, KC_EQL),

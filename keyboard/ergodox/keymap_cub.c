@@ -1,4 +1,11 @@
-static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+#include <util/delay.h>
+#include "action_layer.h"
+#include "action_util.h"
+#include "bootloader.h"
+#include "keymap_common.h"
+
+
+const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Keymap: Default Layer in QWERTY
      *
@@ -378,7 +385,7 @@ enum macro_id {
 /*
  * Fn action definition
  */
-static const uint16_t PROGMEM fn_actions[] = {
+const action_t PROGMEM fn_actions[] = {
     [0] =   ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
     [1] =   ACTION_MODS_KEY(MOD_LSFT, KC_BSLS),             // FN1  = Shifted BackSlash // " in Workman
@@ -425,7 +432,7 @@ static const uint16_t PROGMEM fn_actions[] = {
     [27] =  ACTION_LAYER_TAP_KEY(9, KC_V),                  // FN27 = momentary Layer9 on V key, to use with application-specific shortcuts
 };
 
-static const uint16_t PROGMEM fn_actions_4[] = {
+const action_t PROGMEM fn_actions_4[] = {
     [1]  =  ACTION_MODS_KEY(MOD_LSFT, KC_BSLS),             // FN1  = Shifted BackSlash // " in Workman
     [2]  =  ACTION_MODS_KEY(MOD_LSFT, KC_MINS),             // FN2  = Shifted Minus     // \ in Workman
     [3]  =  ACTION_MODS_KEY(MOD_LSFT, KC_COMM),             // FN3  = Shifted comma     // < in Workman
@@ -433,14 +440,14 @@ static const uint16_t PROGMEM fn_actions_4[] = {
     [5]  =  ACTION_MODS_KEY(MOD_LSFT, KC_SLSH),             // FN5  = Shifted slash     // ? in Workman
 };
 
-static const uint16_t PROGMEM fn_actions_7[] = {
+const action_t PROGMEM fn_actions_7[] = {
     [0]  =  ACTION_MACRO(XMONAD_RESET),                     // FN0  = xmonad-reanimator
     [1]  =  ACTION_MACRO(PASSWORD1),                        // FN1  = default password
     [2]  =  ACTION_MACRO(PASSWORD1),                        // FN2  = other password
     [3]  =  ACTION_MACRO(PASSWORD1),                        // FN3  = mega password
 };
 
-static const uint16_t PROGMEM fn_actions_9[] = {
+const action_t PROGMEM fn_actions_9[] = {
     [0]  =  ACTION_MODS_KEY(MOD_LCTL,          KC_P0),      // FN0  = Ctrl+0
     [1]  =  ACTION_MODS_KEY(MOD_LALT,          KC_P1),      // FN1  = Alt+1
     [2]  =  ACTION_MODS_KEY(MOD_LALT,          KC_P2),      // FN2  = Alt+2
