@@ -13,10 +13,10 @@
 * |--------+------+------+------+------+------|                           		 |------+------+------+------+------+--------|
 * | SHIFT  |   Z  |   X  |   C  |   V  |   B  |                           		 |   N  |   M  |  ,.  |  .>  |  /?  | FN2    |
 * `--------+------+------+------+------+-------                           		 `------+------+------+------+------+--------'
-*          |GUI   | `~   |MOUSE1|MOUSE2|                                         		|  [{  |  ]}  | ESC  | ENT  |
+*          |FUNC2 | GUI  |MOUSE1|MOUSE2|                                         		|  [{  |  ]}  | App  | FUNC2|
 *          `---------------------------'                                         		`---------------------------'
 *                                        ,-------------.         ,-------------.
-*                                        |FUNC2 | Alt  |         | Alt  |FUNC2 |
+*                                        | `~   |  Alt |         | Alt  | ESC  |
 *                                 ,------|------|------|         |------+------+------.
 *                                 |      |      | Shift|         |Shift |      |      |
 *                                 |BSpace|      |------|         |------|      | Space|
@@ -57,8 +57,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            TAB, Q   ,W   ,E   ,R   ,T   ,
            DEL, A   ,S   ,D   ,F   ,G   ,
            LSFT, Z  ,X   ,C   ,V   ,B   ,
-                LGUI ,GRV ,BTN1,BTN2,
-                               FN4,LALT,
+                CAPS,LGUI,BTN1,BTN2,
+                               GRV,LALT,
                                    LSFT,
                           BSPC ,FN1 ,LCTL,
            F9  ,F10 ,F11 ,F12 ,PSCR,FN5,PAUS,FN9 ,FN0,
@@ -66,8 +66,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            Y   ,U   ,I   ,O   ,P   ,BSLS,
            H   ,J   ,K   ,L   ,SCLN,QUOT,
            N   ,M   ,COMM,DOT ,SLSH,FN2,
-                LBRC,RBRC,APP,ENT,
-           RALT,FN4,
+                LBRC,RBRC,FN6,FN9,
+           RALT,ESC,
            RSFT,
            RCTL,FN1 ,SPC
     ),
@@ -78,18 +78,18 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            FN17,FN12  ,FN13  ,FN14   ,FN15  ,FN16  ,
            FN29,TRNS,TRNS,MS_U ,TRNS,TRNS,
            TRNS,FN31,MS_L,MS_D ,MS_R ,WH_U,
-           LSFT,FN4,FN30,FN2,FN3,WH_D,
-               INS ,FN27,TRNS ,TRNS,
-                          NO ,TRNS,
+           LSFT,TRNS,TRNS,TRNS,TRNS,WH_D,
+                NO ,TRNS,TRNS ,TRNS,
+                         FN27 ,TRNS,
                                TRNS,
                      TRNS,TRNS ,TRNS ,
            TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,FN6,TRNS,NO ,TRNS ,
            FN7  ,FN8  ,FN9  ,FN10   ,FN11 ,FN26,
-           FN5,HOME,UP  ,END  ,TRNS,FN18,
-           PGUP,LEFT,DOWN,RIGHT,FN20,FN19,
-           PGDN,TRNS,FN23,FN22 ,FN21,TRNS ,
+           PGUP,HOME,UP  ,END  ,TRNS,FN18,
+           PGDN,LEFT,DOWN,RIGHT,FN20,FN19,
+           TRNS,TRNS,FN23,FN22 ,FN21,TRNS ,
                 FN24,FN25,ESC  ,TRNS,
-           TRNS,NO,
+           TRNS,TRNS,
            TRNS,
            TRNS ,TRNS,TRNS  
     ),
@@ -99,22 +99,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS,TRNS,TRNS ,TRNS ,
            TRNS ,F1   ,F2   ,F3    ,F4  ,F5  ,
            TRNS ,F6   ,F7   ,F8    ,F9  ,F10 ,
-           TRNS ,TRNS ,WSCH,TRNS  ,TRNS,F11 ,
+           TRNS ,TRNS ,TRNS,TRNS  ,TRNS,F11 ,
            TRNS,TRNS,TRNS,TRNS ,TRNS,F12 ,
-                TRNS,ACL0,ACL1 ,ACL2,
+                TRNS,TRNS,TRNS ,TRNS,
            TRNS,TRNS,
            TRNS,
-           TRNS ,NO,TRNS,
+           TRNS ,TRNS,TRNS,
 		   
-           TRNS,TRNS   ,TRNS   ,TRNS   ,TRNS   ,NO,TRNS,FN0,TRNS,
-           TRNS,TRNS   ,EQL,SLSH,FN8,TRNS,
-           0,7  ,8  ,9  ,MINS,TRNS,
-           0,4  ,5  ,6  ,FN7,DOT,
-           0,1  ,2  ,3  ,ENT,TRNS,
-                NO  ,NO ,NO ,NO  ,
+           TRNS,TRNS   ,TRNS   ,TRNS   ,TRNS   ,NO  ,TRNS,FN0,TRNS,
+           TRNS,TRNS   ,TRNS   ,TRNS   ,TRNS   ,TRNS,
+           TRNS,7      ,8      ,9      ,TRNS   ,TRNS,
+           TRNS,4      ,5      ,6      ,TRNS   ,TRNS,
+           TRNS,1      ,2      ,3      ,TRNS   ,TRNS,
+                TRNS   ,DOT    ,TRNS   ,TRNS   ,
                         TRNS   ,TRNS   ,
-                                TRNS   ,
-                        TRNS   ,NO   ,TRNS
+                        TRNS   ,
+                        TRNS   ,DOT    ,0
  
     )
 	};
@@ -124,14 +124,6 @@ enum function_id {
 };
 
 enum macro_id {
-	CTRL_A,
-	CTRL_C,
-	CTRL_V,
-	CTRL_Z,
-	CTRL_Y,	
-	CTRL_X,
-	CTRL_TAB,
-	CTRL_SFT_TAB,
 	SFT_1,
 	SFT_2,
 	SFT_3,
@@ -166,16 +158,13 @@ static const uint16_t PROGMEM fn_actions[] = {
 		[6] = ACTION_MACRO(CTRL_ALT_DEL),
 		[7] = ACTION_MACRO(SFT_EQL),		
 		[8] = ACTION_MACRO(SFT_8),   		
-		[9] = ACTION_LAYER_TOGGLE(2),
+		[9] = ACTION_LAYER_TOGGLE(2)
 
 };
 
 static const uint16_t PROGMEM fn_actions_1[] = {
 //2 slots here
-		[2] = ACTION_MACRO(CTRL_C),
-		[3] = ACTION_MACRO(CTRL_V),
-		[4] = ACTION_MACRO(CTRL_Z),                     
-		[5] = ACTION_MACRO(CTRL_Y),  
+		[5] = ACTION_LAYER_TOGGLE(2),
 		[6] = ACTION_LAYER_TOGGLE(1),
 		[7] = ACTION_MACRO(SFT_6),                     
 		[8] = ACTION_MACRO(SFT_7),                     
@@ -194,13 +183,11 @@ static const uint16_t PROGMEM fn_actions_1[] = {
 		[21] = ACTION_MACRO(SFT_SLSH),                     
 		[22] = ACTION_MACRO(SFT_DOT),                     
 		[23] = ACTION_MACRO(SFT_COMM),                     
-		[24] = ACTION_MACRO(SFT_LBRC),                     
+		[24] = ACTION_MACRO(SFT_LBRC),                   
 		[25] = ACTION_MACRO(SFT_RBRC),                     
 		[26] = ACTION_MACRO(SFT_EQL),
 		[27] = ACTION_MACRO(SFT_GRV),
-		[29] = ACTION_MACRO(ALT_TAB),
-		[30] = ACTION_MACRO(CTRL_X),  
-		[31] = ACTION_MACRO(CTRL_A),
+		[29] = ACTION_MACRO(ALT_TAB)
 
 };
 
@@ -223,35 +210,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
  */
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-    switch (id) {
-		case CTRL_A:
-			return (record->event.pressed ?
-				MACRO(D(LCTRL), D(A), END) :
-				MACRO(U(LCTRL), U(A), END));
-
-		case CTRL_C:
-            return (record->event.pressed ?
-                    MACRO( D(LCTRL), D(C), END ) :
-                    MACRO( U(LCTRL), U(C), END ));
-					
-        case CTRL_V:
-            return (record->event.pressed ?
-                    MACRO( D(LCTRL), D(V), END ) :
-                    MACRO( U(LCTRL), U(V), END ));					
-
-        case CTRL_Z:
-            return (record->event.pressed ?
-                    MACRO( D(LCTRL), D(Z), END ) :
-                    MACRO( U(LCTRL), U(Z), END ));
-					
-        case CTRL_Y:
-            return (record->event.pressed ?
-                    MACRO( D(LCTRL), D(Y), END ) :
-                    MACRO( U(LCTRL), U(Y), END ));
-        case CTRL_X:
-            return (record->event.pressed ?
-                    MACRO( D(LCTRL), D(X), END ) :
-                    MACRO( U(LCTRL), U(X), END ));					
+    switch (id) {				
        case SFT_1:
             return (record->event.pressed ?
                     MACRO( D(RSFT), D(1), END ) :
@@ -313,7 +272,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                     MACRO( D(RSFT), D(SLSH), END ) :
                     MACRO( U(RSFT), U(SLSH), END ));					
         case SFT_DOT:
-            return (record->event.pressed ?
+            return (record->event.presnnsed ?
                     MACRO( D(RSFT), D(DOT), END ) :
                     MACRO( U(RSFT), U(DOT), END ));	
         case SFT_COMM:
