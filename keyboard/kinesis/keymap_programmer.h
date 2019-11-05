@@ -66,7 +66,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            Y   ,U   ,I   ,O   ,P   ,BSLS,
            H   ,J   ,K   ,L   ,SCLN,QUOT,
            N   ,M   ,COMM,DOT ,SLSH,FN2,
-                LBRC,RBRC,FN6 ,FN11,
+                LBRC,RBRC,FN12,FN11,
            RALT,FN9,
            RSFT,
            RCTL,FN1 ,SPC
@@ -171,7 +171,8 @@ enum macro_id {
 	SFT_GRV,
 	ALT_TAB,
     CTRL_TAB,
-	CTRL_ALT_DEL
+	CTRL_ALT_DEL,
+    WIN_L    
 };
 
 static const uint16_t PROGMEM fn_actions[] = {
@@ -185,7 +186,9 @@ static const uint16_t PROGMEM fn_actions[] = {
 		[8] = ACTION_MACRO(SFT_8),   		
 		[9] = ACTION_LAYER_TOGGLE(2),
 		[10] = ACTION_MACRO(ALT_TAB),
-		[11] = ACTION_LAYER_TOGGLE(3)
+		[11] = ACTION_LAYER_TOGGLE(3),
+        [12] = ACTION_MACRO(WIN_L),
+
 };
 
 static const uint16_t PROGMEM fn_actions_1[] = {
@@ -336,7 +339,11 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         case CTRL_TAB:
             return (record->event.pressed ?
                     MACRO( D(LCTRL), D(TAB), END ) :
-                    MACRO( U(LCTRL), U(TAB), END ));	                
+                    MACRO( U(LCTRL), U(TAB), END ));	
+        case WIN_L:
+            return (record->event.pressed ?
+                    MACRO( D(LGUI), D(L), END ) :
+                    MACRO( U(LGUI), U(L), END ));	                                     
 
     }
     return MACRO_NONE;
