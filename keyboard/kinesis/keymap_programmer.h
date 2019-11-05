@@ -57,8 +57,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            TAB, Q   ,W   ,E   ,R   ,T   ,
            DEL, A   ,S   ,D   ,F   ,G   ,
            LSFT, Z  ,X   ,C   ,V   ,B   ,
-                CAPS,LGUI,BTN1,BTN2,
-                               GRV,LALT,
+                GRV,LGUI,BTN1,BTN2,
+                               FN10,LALT,
                                    LSFT,
                           BSPC ,FN1 ,LCTL,
            F9  ,F10 ,F11 ,F12 ,PSCR,FN5,PAUS,FN9 ,FN0,
@@ -66,8 +66,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            Y   ,U   ,I   ,O   ,P   ,BSLS,
            H   ,J   ,K   ,L   ,SCLN,QUOT,
            N   ,M   ,COMM,DOT ,SLSH,FN2,
-                LBRC,RBRC,FN6,FN9,
-           RALT,ESC,
+                LBRC,RBRC,FN6 ,FN11,
+           RALT,FN9,
            RSFT,
            RCTL,FN1 ,SPC
     ),
@@ -75,21 +75,21 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 1: Function layer */
     KEYMAP(
            TRNS, TRNS,TRNS,TRNS ,TRNS,TRNS,TRNS,TRNS,TRNS,
-           FN17,FN12  ,FN13  ,FN14   ,FN15  ,FN16  ,
-           FN29,TRNS,TRNS,MS_U ,TRNS,TRNS,
-           TRNS,FN31,MS_L,MS_D ,MS_R ,WH_U,
-           LSFT,TRNS,TRNS,TRNS,TRNS,WH_D,
-                NO ,TRNS,TRNS ,TRNS,
-                         FN27 ,TRNS,
-                               TRNS,
+           TRNS,F1  ,F2   ,F3   ,F4  ,F5  ,
+           TRNS,F6  ,F7   ,F8   ,F9  ,F10 ,
+           TRNS,TRNS,TRNS,TRNS ,TRNS ,F11 ,
+           LSFT,TRNS,TRNS,TRNS ,TRNS ,F12 ,
+                TRNS ,TRNS,TRNS,TRNS ,
+                           FN29,TRNS ,
+                                TRNS ,
                      TRNS,TRNS ,TRNS ,
            TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,FN6,TRNS,NO ,TRNS ,
-           FN7  ,FN8  ,FN9  ,FN10   ,FN11 ,FN26,
-           PGUP,HOME,UP  ,END  ,TRNS,FN18,
-           PGDN,LEFT,DOWN,RIGHT,FN20,FN19,
-           TRNS,TRNS,FN23,FN22 ,FN21,TRNS ,
-                FN24,FN25,ESC  ,TRNS,
-           TRNS,TRNS,
+           TRNS  ,TRNS ,TRNS  ,TRNS   ,TRNS ,TRNS,
+           PGUP,HOME,UP  ,END  ,TRNS,TRNS,
+           PGDN,LEFT,DOWN,RIGHT,TRNS,TRNS,
+           CAPS,TRNS,TRNS,TRNS ,TRNS,TRNS ,
+                FN24,FN25,INS  ,TRNS,
+           TRNS,NO  ,
            TRNS,
            TRNS ,TRNS,TRNS  
     ),
@@ -116,7 +116,31 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                         TRNS   ,
                         TRNS   ,DOT    ,0
  
-    )
+    ),
+	    /* guest layer */
+	[3] =
+    KEYMAP(
+          TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS,TRNS,TRNS ,TRNS ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+                TRNS,TRNS,TRNS ,TRNS,
+                          LCTL ,LGUI,
+                                HOME,
+                    BSPC ,DEL  ,END ,
+		   
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,NO    ,TRNS,FN0,TRNS,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
+                TRNS  ,TRNS    ,TRNS    ,FN0   ,
+                                RALT,RCTL,
+                                PGUP,
+                                PGDN,ENT ,SPC
+ 
+    )    
 	};
 enum function_id {
     BOOTLOAD_KEY,
@@ -146,6 +170,7 @@ enum macro_id {
 	SFT_EQL,
 	SFT_GRV,
 	ALT_TAB,
+    CTRL_TAB,
 	CTRL_ALT_DEL
 };
 
@@ -158,8 +183,9 @@ static const uint16_t PROGMEM fn_actions[] = {
 		[6] = ACTION_MACRO(CTRL_ALT_DEL),
 		[7] = ACTION_MACRO(SFT_EQL),		
 		[8] = ACTION_MACRO(SFT_8),   		
-		[9] = ACTION_LAYER_TOGGLE(2)
-
+		[9] = ACTION_LAYER_TOGGLE(2),
+		[10] = ACTION_MACRO(ALT_TAB),
+		[11] = ACTION_LAYER_TOGGLE(3)
 };
 
 static const uint16_t PROGMEM fn_actions_1[] = {
@@ -187,13 +213,17 @@ static const uint16_t PROGMEM fn_actions_1[] = {
 		[25] = ACTION_MACRO(SFT_RBRC),                     
 		[26] = ACTION_MACRO(SFT_EQL),
 		[27] = ACTION_MACRO(SFT_GRV),
-		[29] = ACTION_MACRO(ALT_TAB)
-
+        [29] = ACTION_MACRO(CTRL_TAB)
 };
 
 static const uint16_t PROGMEM fn_actions_2[] = {
 	//2 slots here
 	[0] = ACTION_LAYER_TOGGLE(2),
+};
+
+static const uint16_t PROGMEM fn_actions_3[] = {
+	//2 slots here
+	[0] = ACTION_LAYER_TOGGLE(3),
 };
 
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
@@ -272,7 +302,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                     MACRO( D(RSFT), D(SLSH), END ) :
                     MACRO( U(RSFT), U(SLSH), END ));					
         case SFT_DOT:
-            return (record->event.presnnsed ?
+            return (record->event.pressed ?
                     MACRO( D(RSFT), D(DOT), END ) :
                     MACRO( U(RSFT), U(DOT), END ));	
         case SFT_COMM:
@@ -298,11 +328,15 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         case ALT_TAB:
             return (record->event.pressed ?
                     MACRO( D(LALT), D(TAB), END ) :
-                    MACRO( U(TAB), END ));													
+                    MACRO( U(LALT), U(TAB), END ));													
 		case CTRL_ALT_DEL:
 			return (record->event.pressed ?
 				MACRO(D(LCTRL), D(LALT), D(DEL), END) :
 				MACRO(U(LCTRL), U(LALT), U(DEL), END));
+        case CTRL_TAB:
+            return (record->event.pressed ?
+                    MACRO( D(LCTRL), D(TAB), END ) :
+                    MACRO( U(LCTRL), U(TAB), END ));	                
 
     }
     return MACRO_NONE;

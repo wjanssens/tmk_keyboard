@@ -104,6 +104,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FN_ACTIONS_SIZE (sizeof(fn_actions) / sizeof(fn_actions[0]))
 #define FN_ACTIONS_1_SIZE   (sizeof(fn_actions_1) / sizeof(fn_actions_1[0]))
 #define FN_ACTIONS_2_SIZE   (sizeof(fn_actions_2) / sizeof(fn_actions_2[0]))
+#define FN_ACTIONS_3_SIZE   (sizeof(fn_actions_3) / sizeof(fn_actions_3[0]))
 
 /* translates key to keycode */
 uint8_t keymap_key_to_keycode(uint8_t layer, keypos_t key)
@@ -132,6 +133,9 @@ action_t keymap_fn_to_action(uint8_t keycode)
 	}
 	if (layer == 2 && FN_INDEX(keycode) < FN_ACTIONS_2_SIZE) {
 		action.code = pgm_read_word(&fn_actions_2[FN_INDEX(keycode)]);
+	}
+	if (layer == 3 && FN_INDEX(keycode) < FN_ACTIONS_3_SIZE) {
+		action.code = pgm_read_word(&fn_actions_3[FN_INDEX(keycode)]);
 	}
 	// by default, use fn_actions from default layer 0
 	// this is needed to get mapping for same key, that was used switch to some layer,
