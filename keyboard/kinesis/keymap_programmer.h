@@ -52,11 +52,11 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 0: Default */
 	[0] = 
     KEYMAP(
-           ESC,F1  ,F2  ,F3  ,F4  ,F5  ,F6   ,F7   ,F8,
+           ESC ,F1  ,F2  ,F3  ,F4  ,F5  ,F6   ,F7   ,F8,
            MINS, 1   ,2   ,3   ,4   ,5   ,
-           TAB, Q   ,W   ,E   ,R   ,T   ,
-           DEL, A   ,S   ,D   ,F   ,G   ,
-           LSFT, Z  ,X   ,C   ,V   ,B   ,
+           TAB , Q   ,W   ,E   ,R   ,T   ,
+           DEL , A   ,S   ,D   ,F   ,G   ,
+           FN13, Z  ,X   ,C   ,V   ,B   ,
                 GRV,LGUI,BTN1,BTN2,
                                FN10,LALT,
                                    LSFT,
@@ -96,11 +96,11 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	    /* Layer 2: num pad */
 	[2] =
     KEYMAP(
-          TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS,TRNS,TRNS ,TRNS ,
-           TRNS ,F1   ,F2   ,F3    ,F4  ,F5  ,
-           TRNS ,F6   ,F7   ,F8    ,F9  ,F10 ,
-           TRNS ,TRNS ,TRNS,TRNS  ,TRNS,F11 ,
-           TRNS,TRNS,TRNS,TRNS ,TRNS,F12 ,
+           TRNS,TRNS ,TRNS ,TRNS ,TRNS,TRNS,TRNS,TRNS ,TRNS ,
+           TRNS,TRNS ,TRNS ,TRNS ,TRNS,TRNS ,
+           TRNS,TRNS ,TRNS ,TRNS ,TRNS,TRNS ,
+           TRNS,TRNS ,TRNS ,TRNS ,TRNS,TRNS ,
+           TRNS,TRNS,TRNS,TRNS ,TRNS,TRNS ,
                 TRNS,TRNS,TRNS ,TRNS,
            TRNS,TRNS,
            TRNS,
@@ -188,7 +188,7 @@ static const uint16_t PROGMEM fn_actions[] = {
 		[10] = ACTION_MACRO(ALT_TAB),
 		[11] = ACTION_LAYER_TOGGLE(3),
         [12] = ACTION_MACRO(WIN_L),
-
+		[13] = ACTION_MODS_TAP_KEY(MOD_LSFT, KC_CAPS) 
 };
 
 static const uint16_t PROGMEM fn_actions_1[] = {
@@ -216,7 +216,7 @@ static const uint16_t PROGMEM fn_actions_1[] = {
 		[25] = ACTION_MACRO(SFT_RBRC),                     
 		[26] = ACTION_MACRO(SFT_EQL),
 		[27] = ACTION_MACRO(SFT_GRV),
-        [29] = ACTION_MACRO(CTRL_TAB)
+        [29] = ACTION_MACRO(CTRL_TAB)     
 };
 
 static const uint16_t PROGMEM fn_actions_2[] = {
