@@ -13,10 +13,10 @@
 * |--------+------+------+------+------+------|                           		 |------+------+------+------+------+--------|
 * | SHIFT  |   Z  |   X  |   C  |   V  |   B  |                           		 |   N  |   M  |  ,.  |  .>  |  /?  | FN2    |
 * `--------+------+------+------+------+-------                           		 `------+------+------+------+------+--------'
-*          |FUNC2 | GUI  |MOUSE1|MOUSE2|                                         		|  [{  |  ]}  | App  | FUNC2|
+*          |GUI   | `~   |MOUSE1|MOUSE2|                                         		|  [{  |  ]}  | ESC  | ENT  |
 *          `---------------------------'                                         		`---------------------------'
 *                                        ,-------------.         ,-------------.
-*                                        | `~   |  Alt |         | Alt  | ESC  |
+*                                        |FUNC2 | Alt  |         | Alt  |FUNC2 |
 *                                 ,------|------|------|         |------+------+------.
 *                                 |      |      | Shift|         |Shift |      |      |
 *                                 |BSpace|      |------|         |------|      | Space|
@@ -52,21 +52,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 0: Default */
 	[0] = 
     KEYMAP(
-           ESC ,F1  ,F2  ,F3  ,F4  ,F5  ,F6   ,F7   ,F8,
+           ESC,F1  ,F2  ,F3  ,F4  ,F5  ,F6   ,F7   ,F8,
            MINS, 1   ,2   ,3   ,4   ,5   ,
-           TAB , Q   ,W   ,E   ,R   ,T   ,
-           DEL , A   ,S   ,D   ,F   ,G   ,
-           FN13, Z  ,X   ,C   ,V   ,B   ,
-                GRV,LGUI,BTN1,BTN2,
-                               FN10,LALT,
+           TAB, Q   ,W   ,E   ,R   ,T   ,
+           DEL, A   ,S   ,D   ,F   ,G   ,
+           LSFT, Z  ,X   ,C   ,V   ,B   ,
+                GRV ,LGUI,BTN1,BTN2,
+                               FN11,LALT,
                                    LSFT,
                           BSPC ,FN1 ,LCTL,
-           F9  ,F10 ,F11 ,F12 ,PSCR,FN5,PAUS,FN9 ,FN0,
+
+           F9  ,F10 ,F11 ,FN10 ,PSCR,FN5,PAUS,FN9 ,FN0,
            6   ,7   ,8   ,9   ,0   ,EQL,
            Y   ,U   ,I   ,O   ,P   ,BSLS,
            H   ,J   ,K   ,L   ,SCLN,QUOT,
            N   ,M   ,COMM,DOT ,SLSH,FN2,
-                LBRC,RBRC,FN12,FN11,
+                LBRC,RBRC,FN12,ESC,
            RALT,FN9,
            RSFT,
            RCTL,FN1 ,SPC
@@ -75,23 +76,24 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 1: Function layer */
     KEYMAP(
            TRNS, TRNS,TRNS,TRNS ,TRNS,TRNS,TRNS,TRNS,TRNS,
-           TRNS,F1  ,F2   ,F3   ,F4  ,F5  ,
-           TRNS,F6  ,F7   ,F8   ,F9  ,F10 ,
-           TRNS,TRNS,TRNS,TRNS ,TRNS ,F11 ,
-           LSFT,TRNS,TRNS,TRNS ,TRNS ,F12 ,
-                TRNS ,TRNS,TRNS,TRNS ,
-                           FN29,TRNS ,
-                                TRNS ,
+           FN17,FN12  ,FN13  ,FN14   ,FN15  ,FN16  ,
+           F1  ,F2   ,F3   ,F4  ,F5  ,F6,
+           F7   ,F8   ,F9  ,F10 ,F11, F12,
+           LSFT,TRNS,TRNS,TRNS ,TRNS ,TRNS,
+                TRNS ,TRNS,TRNS ,TRNS,
+                          FN29 ,TRNS,
+                               TRNS,
                      TRNS,TRNS ,TRNS ,
+                     
            TRNS  ,TRNS ,TRNS ,TRNS  ,TRNS,FN6,TRNS,NO ,TRNS ,
-           TRNS  ,TRNS ,TRNS  ,TRNS   ,TRNS ,TRNS,
-           PGUP,HOME,UP  ,END  ,TRNS,TRNS,
-           PGDN,LEFT,DOWN,RIGHT,TRNS,TRNS,
-           CAPS,TRNS,TRNS,TRNS ,TRNS,TRNS ,
-                FN24,FN25,INS  ,TRNS,
-           TRNS,NO  ,
+           FN7  ,FN8  ,FN9  ,FN10   ,FN11 ,FN26,
+           TRNS,HOME,UP  ,END  ,TRNS,FN18,
+           PGUP,LEFT,DOWN,RIGHT,FN20,FN19,
+           PGDN,TRNS,FN23,FN22 ,FN21,TRNS ,
+                FN24,FN25,TRNS ,TRNS,
+           TRNS,TRNS,
            TRNS,
-           TRNS ,TRNS,TRNS  
+           TRNS ,TRNS,ENT  
     ),
 	    /* Layer 2: num pad */
 	[2] =
@@ -108,14 +110,13 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		   
            TRNS,TRNS   ,TRNS   ,TRNS   ,TRNS   ,NO  ,TRNS,FN0,TRNS,
            TRNS,TRNS   ,TRNS   ,TRNS   ,TRNS   ,TRNS,
-           TRNS,7      ,8      ,9      ,TRNS   ,TRNS,
-           TRNS,4      ,5      ,6      ,TRNS   ,TRNS,
-           TRNS,1      ,2      ,3      ,TRNS   ,TRNS,
-                TRNS   ,DOT    ,TRNS   ,TRNS   ,
-                        TRNS   ,TRNS   ,
+           TRNS,P7     ,P8     ,P9     ,TRNS   ,TRNS,
+           TRNS,P4     ,P5     ,P6     ,TRNS   ,TRNS,
+           NLCK,P1     ,P2     ,P3     ,TRNS   ,PENT,
+                TRNS   ,TRNS   ,TRNS   ,TRNS   ,
+                        TRNS   ,FN0   ,
                         TRNS   ,
-                        TRNS   ,DOT    ,0
- 
+                        TRNS   ,PDOT    ,P0
     ),
 	    /* guest layer */
 	[3] =
@@ -126,21 +127,20 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
                 TRNS,TRNS,LEFT ,RGHT,
-                          LCTL ,LGUI,
+                          LCTL ,LALT,
                                 HOME,
                     BSPC ,DEL  ,END ,
 		   
-           TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,NO    ,TRNS,FN0,TRNS,
+           TRNS ,TRNS ,TRNS ,FN0  ,TRNS,NO    ,TRNS,FN0,TRNS,
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,TRNS  ,
            TRNS ,TRNS ,TRNS ,TRNS  ,TRNS,RSFT  ,
-                TRNS  ,TRNS    ,TRNS    ,FN0   ,
+                TRNS  ,TRNS    ,TRNS    ,TRNS   ,
                                 RALT,RCTL,
                                 PGUP,
                                 PGDN,ENT ,SPC
- 
-    )    
+    ) 
 	};
 enum function_id {
     BOOTLOAD_KEY,
@@ -148,6 +148,7 @@ enum function_id {
 };
 
 enum macro_id {
+	CTRL_TAB,
 	SFT_1,
 	SFT_2,
 	SFT_3,
@@ -170,30 +171,26 @@ enum macro_id {
 	SFT_EQL,
 	SFT_GRV,
 	ALT_TAB,
-    CTRL_TAB,
 	CTRL_ALT_DEL,
-    WIN_L    
+    WIN_L
 };
 
 static const uint16_t PROGMEM fn_actions[] = {
 		[0] = ACTION_FUNCTION(BOOTLOAD_KEY),
 		[1] = ACTION_LAYER_MOMENTARY(1),
 		[2] = ACTION_MODS_TAP_KEY(MOD_RSFT, KC_ENT),
-		[4] = ACTION_LAYER_MOMENTARY(2), 
 		[5] = ACTION_LAYER_TOGGLE(1),
 		[6] = ACTION_MACRO(CTRL_ALT_DEL),
 		[7] = ACTION_MACRO(SFT_EQL),		
 		[8] = ACTION_MACRO(SFT_8),   		
 		[9] = ACTION_LAYER_TOGGLE(2),
-		[10] = ACTION_MACRO(ALT_TAB),
-		[11] = ACTION_LAYER_TOGGLE(3),
+        [10] = ACTION_LAYER_TOGGLE(3),
+        [11] = ACTION_MACRO(ALT_TAB),
         [12] = ACTION_MACRO(WIN_L),
-		[13] = ACTION_MODS_TAP_KEY(MOD_LSFT, KC_CAPS) 
 };
 
 static const uint16_t PROGMEM fn_actions_1[] = {
 //2 slots here
-		[5] = ACTION_LAYER_TOGGLE(2),
 		[6] = ACTION_LAYER_TOGGLE(1),
 		[7] = ACTION_MACRO(SFT_6),                     
 		[8] = ACTION_MACRO(SFT_7),                     
@@ -212,11 +209,11 @@ static const uint16_t PROGMEM fn_actions_1[] = {
 		[21] = ACTION_MACRO(SFT_SLSH),                     
 		[22] = ACTION_MACRO(SFT_DOT),                     
 		[23] = ACTION_MACRO(SFT_COMM),                     
-		[24] = ACTION_MACRO(SFT_LBRC),                   
+		[24] = ACTION_MACRO(SFT_LBRC),                     
 		[25] = ACTION_MACRO(SFT_RBRC),                     
 		[26] = ACTION_MACRO(SFT_EQL),
 		[27] = ACTION_MACRO(SFT_GRV),
-        [29] = ACTION_MACRO(CTRL_TAB)     
+		[29] = ACTION_MACRO(CTRL_TAB),
 };
 
 static const uint16_t PROGMEM fn_actions_2[] = {
@@ -243,7 +240,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
  */
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-    switch (id) {				
+    switch (id) {			
        case SFT_1:
             return (record->event.pressed ?
                     MACRO( D(RSFT), D(1), END ) :
@@ -343,7 +340,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         case WIN_L:
             return (record->event.pressed ?
                     MACRO( D(LGUI), D(L), END ) :
-                    MACRO( U(LGUI), U(L), END ));	                                     
+                    MACRO( U(LGUI), U(L), END ));                
 
     }
     return MACRO_NONE;
