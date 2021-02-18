@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "debug.h"
 #include "util.h"
 #include "matrix.h"
+#include "led.h"
 
 #ifndef DEBOUNCE
 #   define DEBOUNCE	5
@@ -82,10 +83,32 @@ void matrix_init(void)
         matrix[i] = 0;
         matrix_debouncing[i] = 0;
     }
+	
+	blink_all_leds();
 }
 
 uint8_t matrix_scan(void)
 {
+	uint8_t layer = biton32(layer_state);
+
+	switch (layer) {
+	case 0:
+		all_led_off();
+		break;
+	case 1:
+		if (!(host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK))) {
+			all_led_off();
+			caps_lock_led_on();
+		}
+		break;
+	case 2:
+		all_led_off();
+		num_lock_led_on();
+		break;
+	default:
+		break;
+	}
+
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         select(i);
         uint8_t row = read(i);
@@ -151,9 +174,14 @@ uint8_t matrix_key_count(void)
 
 static matrix_row_t read(uint8_t row)
 {
-    _delay_us(30);  // without this wait read unstable value.
-    return ~PINB;
+	_delay_us(30);  // without this wait read unstable value.
 
+	//keypad and program buttons
+	if (row == 12)
+	{
+		return ~(PINC | 0b00111111);
+	}
+	return ~PINB;
 }
 
 static void unselect(void)
@@ -166,6 +194,70 @@ static void select(uint8_t row)
 {
     // set A,B,C,G to row value
     PORTF |= row << 4;
+}
+
+void all_led_off(void)
+{
+	PORTD = 0b11111111;
+}
+
+void all_led_on(void)
+{
+	PORTD = 0b00000000;
+}
+
+void num_lock_led_on(void)
+{
+	PORTD = 0b11101111;
+}
+
+void caps_lock_led_on(void)
+{
+	PORTD = 0b01111111;
+}
+
+void scroll_lock_led_on(void)
+{
+	PORTD = 0b11011111;
+}
+
+void keypad_led_on(void)
+{
+	PORTD = 0b10111111;
+}
+
+void blink_all_leds(void)
+{
+	all_led_on();
+	_delay_ms(500);
+
+	all_led_off();
+	_delay_ms(100);
+
+	caps_lock_led_on();
+	_delay_ms(100);
+
+	num_lock_led_on();
+	_delay_ms(100);
+
+	scroll_lock_led_on();
+	_delay_ms(100);
+
+	keypad_led_on();
+	_delay_ms(100);
+
+	//back
+
+	scroll_lock_led_on();
+	_delay_ms(100);
+
+	num_lock_led_on();
+	_delay_ms(100);
+
+	caps_lock_led_on();
+	_delay_ms(100);
+
+	all_led_off();
 }
 
 /* Row pin configuration
